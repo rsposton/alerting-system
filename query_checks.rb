@@ -19,12 +19,12 @@ def init_query
                                   p.url,p.add_date created_at
                                   from pack p, people u where p.uid=u.id and p.id > ",
                        "type"=>"new record","validator"=>"pack_id", "frequency"=>"hourly",
-                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","john@milyoni.com"]},
+                       "distro"=>["regan@milyoni.com"]},
                       {"num"=>2,"name"=>"New Admin Signed Up",
                        "query"=> "select u.id as admin_id,u.name,u.studio,ip_address
                                   from people u where id > ",
                        "type"=>"new record","validator"=>"admin_id", "frequency"=>"hourly",
-                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","john@milyoni.com"]}
+                       "distro"=>["regan@milyoni.com"]}
   ]
   return list_of_checks
 end
