@@ -11,7 +11,8 @@ require_relative 'send_email.rb'
 
 begin
   period = ARGV[0]
-  if ARGV.count != 1
+  no_email = ARGV[1]
+  if ARGV.count < 1
     puts "Usage: #{__FILE__} <PERIOD> [hourly|daily|weekly]"
     puts "  You had #{ARGV.count} parameters. One only please."
     exit 1
@@ -20,6 +21,7 @@ begin
     puts "  You had #{period} as an input parameter. Hourly, daily, weekly, only."
     exit 1
   end
+
 
   ## Connect to database
   client = Mysql2::Client.new(:host => "69.162.175.147", :username => "vcread", :password => "LTAty3CH6dcHXReB",
@@ -87,7 +89,8 @@ begin
       puts message_payload["email"]["subject"]
       puts message_payload["email"]["body"]
       puts check["distro"]
-      send_email(message_payload,check["distro"])
+      # check argument to see if we should suppress the email, or fire away
+      (no_email == "noemail" ? "Suppressing email send" : send_email(message_payload,check["distro"]) )
     elsif
       puts "no records found"
     end
