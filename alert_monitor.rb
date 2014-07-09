@@ -10,18 +10,36 @@ require_relative 'send_email.rb'
 
 
 begin
+  period = ARGV[0]
+  if ARGV.count != 1
+    puts "Usage: #{__FILE__} <PERIOD> [hourly|daily|weekly]"
+    puts "  You had #{ARGV.count} parameters. One only please."
+    exit 1
+  elsif  !['hourly','daily','weekly'].include? period
+    puts "Usage: #{__FILE__} <PERIOD> [hourly|daily|weekly]"
+    puts "  You had #{period} as an input parameter. Hourly, daily, weekly, only."
+    exit 1
+  end
+
+  ## Connect to database
   client = Mysql2::Client.new(:host => "69.162.175.147", :username => "vcread", :password => "LTAty3CH6dcHXReB",
                               :database => "videocards")
-  checkpoint = YAML::load_file('persist.yml')
 
   list_of_checks = init_query
 
+  list_of_checks = list_of_checks.select {|r| r["frequency"] == period}
+
+  if list_of_checks.count == 0
+    puts "Nothing valid in the list of checks for the period: #{period}"
+    exit 1
+  end
   puts "Running through a list of checks"
 
   ## Load checks that should be validated
   list_of_checks.each do |check|
+    puts "======================================="
     puts "##{check["num"]} - #{check["name"]} results"
-    puts "============="
+    puts "======================================="
     case check["type"]
       when "threshold"      ## Checks for anything that crosses a threshold   (e.g., traffic above a specified level)
 
@@ -65,7 +83,11 @@ begin
     end
 
     if !message_payload.nil?
-      send_email(message_payload)
+
+      puts message_payload["email"]["subject"]
+      puts message_payload["email"]["body"]
+      puts check["distro"]
+      send_email(message_payload,check["distro"])
     elsif
       puts "no records found"
     end
