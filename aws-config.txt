@@ -1,0 +1,3 @@
+---
+:access_key_id: AKIAJGZG5FUIQNXZNPFQ
+:secret_access_key: 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
