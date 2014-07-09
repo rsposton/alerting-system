@@ -1,27 +1,43 @@
 def format_results(check,results,send_results)
-  message_header = "Alert:  " + check["name"] + "\n"
+  message_header_text_only = "Alert:  " + check["name"] + "\n"
+  message_header_html = "<h2>Alert:  #{check["name"]}</h2>\n"
   spacer = (120/results.fields.count).round # create some generic spacing based on the number of columns
-  table_header = ''
+
+  # Setup table header
+  table_header_text_only = ''
+  table_header_html = '<table style="padding:10px"><tr>'
   i=0
   while i < results.fields.count
-    table_header += results.fields[i].capitalize + ' '*(spacer-results.fields[i].bytesize)
+    table_header_text_only += results.fields[i].capitalize + ' '*(spacer-results.fields[i].bytesize)
+    table_header_html += '<th>'+results.fields[i].capitalize+'</th>'
     i+=1
   end
+  table_header_html += "</tr>\n"
 
-  message_body = ''
+  # Setup table content
+  message_body_text_only = ''
+  message_body_html = ''
   send_results.each do |row|
     row_content = ''
+    row_content_html = '<tr>'
     j=0
     while j < results.fields.count
-      field_value = row[results.fields[j]].to_s[0..(spacer-2)]
-      row_content += field_value + ' '*(spacer-field_value.length)
+      field_value_for_text_only = row[results.fields[j]].to_s[0..(spacer-2)]
+      row_content += field_value_for_text_only + ' '*(spacer-field_value_for_text_only.length)
+      # Unique formatting for IP addresses
+      # TODO: figure out how to make formatting exceptions more robust
+      row_content_html += results.fields[j] == "ip_address" ? '<td><a href="http://whatismyipaddress.com/ip/'+row[results.fields[j]].to_s+'">'+row[results.fields[j]].to_s+'</a></td>' : '<td>'+row[results.fields[j]].to_s+'</td>'
       j+=1
     end
-    message_body += "\n#{row_content}"
+    message_body_text_only += "\n#{row_content}"
+    message_body_html += row_content_html+"</tr>\n"
   end
+  message_body_html += '</table>'
 
   email_subject = "#{check["type"].capitalize} Alert:  #{check["name"]}"
-  email_message = message_header + table_header + message_body
+  email_message_text_only = message_header_text_only + table_header_text_only + message_body_text_only
+  email_message_html = message_header_html + table_header_html + message_body_html
 
-  return { "mobile" => "SMS message?", "email" => {"subject"=>"#{email_subject}", "body"=>"#{email_message}"}  }
+  return { "mobile" => "SMS message?", "email" => {"subject"=>"#{email_subject}", "body_text_only"=>"#{email_message_text_only}",
+           "body_html"=>"#{email_message_html}"} }
 end

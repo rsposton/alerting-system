@@ -87,7 +87,7 @@ begin
     if !message_payload.nil?
       # write message to stdout
       puts message_payload["email"]["subject"]
-      puts message_payload["email"]["body"]
+      puts message_payload["email"]["body_text_only"]
       puts check["distro"]
 
       # check argument to see if we should suppress the email, or fire away
