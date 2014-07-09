@@ -85,10 +85,11 @@ begin
     end
 
     if !message_payload.nil?
-
+      # write message to stdout
       puts message_payload["email"]["subject"]
       puts message_payload["email"]["body"]
       puts check["distro"]
+
       # check argument to see if we should suppress the email, or fire away
       (no_email == "noemail" ? "Suppressing email send" : send_email(message_payload,check["distro"]) )
     elsif
