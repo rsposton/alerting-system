@@ -23,12 +23,12 @@ def format_results(check,results,send_results)
     j=0
     while j < results.fields.count
       # Unique formatting for IP address, if it is from a known list... this needs to be cleaned up!!
-      us_flag = (['108.227.100.152','173.164.182.62','203.196.159.34','24.5.251.254','61.16.241.214','76.103.249.126','173.164.182.61'].include? row[results.fields[j]].to_s) ? '(Mily)' : ''
+      milyoni_flag = (['108.227.100.152','173.164.182.62','203.196.159.34','24.5.251.254','61.16.241.214','76.103.249.126','173.164.182.61'].include? row[results.fields[j]].to_s) ? '(Mily)' : ''
       field_value_for_text_only = row[results.fields[j]].to_s[0..(spacer-2)]
       row_content += field_value_for_text_only + us_flag + ' '*(spacer-field_value_for_text_only.length)
       # Unique formatting for IP addresses
       # TODO: figure out how to make formatting exceptions more robust
-      row_content_html += results.fields[j] == "ip_address" ? '<td><a href="http://www.iplocation.net/index.php?query='+row[results.fields[j]].to_s+'">'+row[results.fields[j]].to_s+'</a>'+ us_flag +'</td>' : '<td>'+row[results.fields[j]].to_s+'</td>'
+      row_content_html += results.fields[j] == "ip_address" ? '<td><a href="http://www.iplocation.net/index.php?query='+row[results.fields[j]].to_s+'">'+row[results.fields[j]].to_s+'</a>'+ milyoni_flag +'</td>' : '<td>'+row[results.fields[j]].to_s+'</td>'
       j+=1
     end
     message_body_text_only += "\n#{row_content}"

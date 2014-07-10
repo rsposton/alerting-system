@@ -33,7 +33,7 @@ def init_query
                        "type"=>"update", "frequency"=>"minutely",
                        "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_production",
                        "distro"=>["regan@milyoni.com"]},
-                      {"num"=>3,"name"=>"Refresh Materialized View view_rankings",
+                      {"num"=>4,"name"=>"Refresh Materialized View view_rankings",
                        "query"=> "refresh materialized view view_rankings",
                        "type"=>"update", "frequency"=>"minutely",
                        "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_production",

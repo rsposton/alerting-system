@@ -2,7 +2,7 @@
 
 require 'open-uri'
 require_relative 'manage_database_connections.rb'
-require_relative 'utils.rb'
+require_relative 'aws_utils.rb'
 require_relative 'query_checks.rb'
 require_relative 'message_formatter.rb'
 require_relative 'send_email.rb'

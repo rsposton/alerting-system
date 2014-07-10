@@ -1,4 +1,4 @@
-require_relative 'utils.rb'
+require_relative 'aws_utils.rb'
 
 def send_email(message_payload,email_list)
   ses = AWS::SimpleEmailService.new
