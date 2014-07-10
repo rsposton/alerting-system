@@ -9,7 +9,7 @@ def init_query
                                 and timestampdiff(MINUTE,date_of_event,now()) < -240
                                 group by 1,2,3,4
                                 having count(distinct g.session_id) > 0",
-                      "type"=>"threshold","validator"=>"visitors", "limit"=>2, "frequency"=>"hourly",
+                      "type"=>"threshold","validator"=>"visitors", "limit"=>20, "frequency"=>"hourly",
                       "database_connection"=>"mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards",
                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","john@milyoni.com"]},
                       {"num"=>1,"name"=>"New Pack Created",
