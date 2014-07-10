@@ -4,7 +4,6 @@ require 'mysql2'
 require 'pg'
 require 'open-uri'
 require_relative 'utils.rb'
-#require_relative 'config/environment.rb'
 require_relative 'query_checks.rb'
 require_relative 'message_formatter.rb'
 require_relative 'send_email.rb'
@@ -26,6 +25,9 @@ begin
 
 
   ## Connect to database
+  #'postgres://localhost/local_alert')
+  #'mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards'
+
   client = Mysql2::Client.new(:host => "69.162.175.147", :username => "vcread", :password => "LTAty3CH6dcHXReB",
                               :database => "videocards")
 
