@@ -2,7 +2,7 @@
 
 require 'mysql2'
 require 'pg'
-require 'URI'
+require 'open-uri'
 require_relative 'utils.rb'
 #require_relative 'config/environment.rb'
 require_relative 'query_checks.rb'
