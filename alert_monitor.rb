@@ -1,8 +1,10 @@
 #!/usr/bin/ruby
 
 require 'mysql2'
-require 'yaml'
+require 'pg'
+require 'URI'
 require_relative 'utils.rb'
+#require_relative 'config/environment.rb'
 require_relative 'query_checks.rb'
 require_relative 'message_formatter.rb'
 require_relative 'send_email.rb'
@@ -44,7 +46,6 @@ begin
     puts "======================================="
     case check["type"]
       when "threshold"      ## Checks for anything that crosses a threshold   (e.g., traffic above a specified level)
-
         results = client.query(check["query"])
 
         # Check if any records cross the threshold
@@ -57,10 +58,26 @@ begin
         end
 
       when "new record"     ## Checks for new records since the last run
-        checkpoint = YAML::load_file('persist.yml')
+        # Get the max value for the primary key the last time this was run
+        db = URI.parse(ENV['DATABASE_URL'] || 'postgres://localhost/local_alert')
+
+        conn = PG.connect(
+            :dbname => db.path[1..100],
+            :host => db.host,
+            :user => db.user || "reganposton",
+            :password => db.password || nil,
+            :port => db.port || 5432)
+
+        results = conn.exec( "SELECT value FROM max_values where check_number=#{check['num']} and field_name='#{check['validator']}'" )
+        if results.count == 1
+          check_value=results[0]["value"]
+        else
+          puts "ABORT: multiple values found for new record check: #{check['name']}"
+          exit 1
+        end
 
         # Update "new record" query check for most recent value from persist.yml
-        full_query = check["query"].to_s + checkpoint['threshold_value'][check["validator"]].to_s
+        full_query = check["query"].to_s + check_value.to_s
 
         # Run full query with the value from persist.yml
         results = client.query(full_query)
@@ -69,14 +86,14 @@ begin
         if results.count > 0
           message_payload = format_results(check,results,results)
 
-          max = checkpoint['threshold_value'][check["validator"]].to_i
+          max = check_value.to_i
           results.each do |row|
             max = row[check["validator"]].to_i > max ? row[check["validator"]] : max
           end
 
-          # Update persist.yml with new max
-          checkpoint['threshold_value'][check["validator"]] = max
-          File.open('persist.yml','w') {|f| f.write checkpoint.to_yaml }
+          # Update database with new max
+          conn.exec( "update max_values set value=#{max} where check_number=#{check['num']} and field_name='#{check['validator']}'" )
+          conn.close
         end
         # Format the message for email and SMS
 

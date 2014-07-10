@@ -17,7 +17,7 @@ require 'aws-sdk'
 
 # Load the user's credentials from a file, if it exists.
 begin
-  config_file = File.open('aws-config.txt') { |f| f.read }
+  config_file = File.open('config/aws-config.txt') { |f| f.read }
 rescue
   puts "No config file! Hope you set your AWS creds in the environment..."
 end
