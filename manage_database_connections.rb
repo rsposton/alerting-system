@@ -45,21 +45,3 @@ class ExecuteQuery
   end
 
 end
-
-p=ExecuteQuery.new
-results = p.main("mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards","select count(*) from pack")
-results.each do |row|
-  puts row
-end
-
-r=ExecuteQuery.new
-results = r.main("postgres://localhost/local_alert","select count(*) from max_values")
-results.each do |row|
-  puts row
-end
-
-
-#'postgres://localhost/local_alert')
-#'mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards'
-
-
