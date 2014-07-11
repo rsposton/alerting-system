@@ -70,7 +70,7 @@ begin
         # Update query with the max value from the last execution of this query
         if results.count == 1
           check_value = results[0]["value"]
-          full_query = check["query"].to_s + check_value.to_s
+          full_query = check["query"].to_s.sub! 'FIELD1', check_value.to_s
         else
           puts "ABORT: multiple values found for new record check: #{check['name']}"
           exit 1
@@ -98,9 +98,11 @@ begin
         end
         # Format the message for email and SMS
 
-      when "update"   # simple periodic updates (like refreshing a materialized view)
-        r=ExecuteQuery.new
-        results = r.main(check_uri,check["query"])
+      when "update"    # simple periodic updates (like refreshing a materialized view)
+        if ENV["ENVIRONMENT"] != "test" # don't run this in test
+          r=ExecuteQuery.new
+          results = r.main(check_uri,check["query"])
+        end
       else
         puts "Unknown validation type"
     end

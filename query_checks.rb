@@ -18,13 +18,13 @@ def init_query
                                   substring(u.name from 1 for 15) as name,
                                   substring(u.studio from 1 for 15) as studio,
                                   p.url,p.add_date created_at
-                                  from pack p, people u where p.uid=u.id and p.id > ",
+                                  from pack p, people u where p.uid=u.id and p.id > FIELD1",
                        "type"=>"new record","validator"=>"pack_id", "frequency"=>"minutely",
                        "database_connection"=>"mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards",
                        "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","joe@milyoni.com","emily@milyoni.com","barry@milyoni.com"]},
                       {"num"=>2,"name"=>"New Admin Signed Up",
                        "query"=> "select u.id as admin_id,u.name,u.studio,ip_address
-                                  from people u where id > ",
+                                  from people u where id > FIELD1",
                        "type"=>"new record","validator"=>"admin_id", "frequency"=>"minutely",
                        "database_connection"=>"mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards",
                        "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","john@milyoni.com","joe@milyoni.com","emily@milyoni.com","barry@milyoni.com"]},
@@ -37,7 +37,17 @@ def init_query
                        "query"=> "refresh materialized view view_rankings",
                        "type"=>"update", "frequency"=>"minutely",
                        "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_staging",
-                       "distro"=>["regan@milyoni.com"]}
-                      ]
+                       "distro"=>["regan@milyoni.com"]},
+                      {"num"=>5,"name"=>"Daily Report - New Packs Created Today",
+                       "query"=> "select p.id as pack_id,
+                                  p.name as 'pack Name',
+                                  substring(u.name from 1 for 15) as name,
+                                  substring(u.studio from 1 for 15) as studio,
+                                  p.url,p.add_date created_at
+                                  from pack p, people u where p.uid=u.id and p.id > FIELD1",
+                       "type"=>"new record","validator"=>"pack_id", "frequency"=>"daily",
+                       "database_connection"=>"mysql://vcread:LTAty3CH6dcHXReB@69.162.175.147/videocards",
+                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com","joe@milyoni.com","emily@milyoni.com","barry@milyoni.com","john@milyoni.com"]}
+  ]
   return list_of_checks
 end
