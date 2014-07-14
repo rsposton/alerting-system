@@ -53,7 +53,7 @@ begin
 
         # Check if any records cross the threshold
         # Remove any records that are below the threshold
-        send_results = results.reject {|r| r[check["validator"]] < check["limit"]}
+        send_results = results.reject {|r| r[check["validator"]].to_i < check["limit"]}
 
         # Send to formatter if we have more than one record
         if send_results.count > 0
