@@ -23,7 +23,7 @@ def format_results(check,results,send_results)
     j=0
     while j < results.fields.count
       # Unique formatting for IP address, if it is from a known list... this needs to be cleaned up!!
-      milyoni_flag = (['108.227.100.152','173.164.182.62','203.196.159.34','24.5.251.254','61.16.241.214','76.103.249.126','173.164.182.61','216.70.158.117','71.233.236.125'].include? row[results.fields[j]].to_s) ? '(Mily)' : ''
+      milyoni_flag = (['108.227.100.152','173.164.182.62','203.196.159.34','24.5.251.254','61.16.241.214','76.103.249.126','173.164.182.61','216.70.158.117','71.233.236.125','24.4.40.180','208.73.113.6','38.75.7.150'].include? row[results.fields[j]].to_s) ? '(Mily)' : ''
       field_value_for_text_only = row[results.fields[j]].to_s[0..(spacer-2)]
       row_content += field_value_for_text_only + milyoni_flag + ' '*(spacer-field_value_for_text_only.length)
       # Unique formatting for IP addresses

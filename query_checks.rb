@@ -54,7 +54,15 @@ def init_query
                                   where r.pack_id=p.id and r.admin_id=a.id limit 10",
                        "type"=>"threshold","validator"=>"rank", "limit"=>0, "frequency"=>"daily",
                        "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_staging",
-                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com"]}
+                       "distro"=>["regan@milyoni.com","david@milyoni.com","manasi@milyoni.com","dean@milyoni.com","sheila@milyoni.com"]},
+                      {"num"=>7,"name"=>"Drop and Create Temporary Email Table for Tableau Admin Follow Up report",
+                       "query"=> "drop table tmp_auth_users; create table tmp_auth_users as select id,email,last_sign_in_at,created_at
+                                  from dblink('postgres://qzetlttsenwlss:SBAsTK1oK7ad2Mi6fBWClbWUcr@ec2-23-21-170-57.compute-1.amazonaws.com:5432/dbu7lirug8msem',
+                                  'select id,email,last_sign_in_at,created_at from users')
+                                  as p(id integer, email varchar(255), last_sign_in_at timestamp, created_at timestamp)",
+                       "type"=>"update", "frequency"=>"hourly",
+                       "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_staging",
+                       "distro"=>["regan@milyoni.com"]}
   ]
   return list_of_checks
 end
