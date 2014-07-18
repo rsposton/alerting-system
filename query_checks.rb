@@ -5,7 +5,7 @@ def init_query
                                 substring(concat(p.id,'-',p.name) from 1 for 46) as pack,
                                 p.url,count(distinct g.session_id) as visitors
                                 from pack p, people u, generate_report g
-                                where p.uid=u.id and g.pack_id=p.id
+                                where p.uid=u.id and g.pack_id=p.id and p.id not in (732)
                                 and timestampdiff(MINUTE,date_of_event,now()) < -240
                                 group by 1,2,3,4
                                 having count(distinct g.session_id) > 0",
@@ -63,6 +63,6 @@ def init_query
                        "type"=>"update", "frequency"=>"hourly",
                        "database_connection"=>"postgres://milyoni:milyoni2014@dw-staging.c7zsulqfsfjz.us-west-2.rds.amazonaws.com:5432/data_warehouse_staging",
                        "distro"=>["regan@milyoni.com"]}
-  ]
+                      ]
   return list_of_checks
 end
